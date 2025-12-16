@@ -32,6 +32,13 @@ jobs:
               env:
                   NODE_ENV: production
 
+            - name: Clean unnecessary files
+              working-directory: backend
+              run: |
+                  rm -rf .cache node_modules/.cache
+                  find . -name ".strapi-updater.json" -delete
+                  find . -name "*.log" -delete
+
             - name: Create .env file for production
               working-directory: backend
               run: |
