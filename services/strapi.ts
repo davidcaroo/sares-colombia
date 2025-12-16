@@ -1,5 +1,9 @@
 // Strapi API client service
-const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const stripTrailingSlash = (url: string) => url.replace(/\/+$/, '');
+const getBrowserOrigin = () => (typeof window !== 'undefined' ? window.location.origin : 'https://sarescol.com');
+
+export const SITE_URL = stripTrailingSlash(import.meta.env.VITE_SITE_URL || getBrowserOrigin());
+const STRAPI_URL = stripTrailingSlash(import.meta.env.VITE_STRAPI_URL || SITE_URL);
 const STRAPI_TOKEN = import.meta.env.VITE_STRAPI_READ_TOKEN;
 const API_BASE = `${STRAPI_URL}/api`;
 

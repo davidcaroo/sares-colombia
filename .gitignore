@@ -16,9 +16,17 @@ dist-ssr
 backend/.cache
 backend/.tmp
 backend/node_modules
+backend/dist
+backend/build
 .env
-.env.*
+.env.local
+.env.*.local
 *.sqlite
+*.sqlite3
+
+# Production builds
+dist/
+build/
 
 # Editor directories and files
 .vscode/*
