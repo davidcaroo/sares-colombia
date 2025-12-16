@@ -91,7 +91,7 @@ const CatalogPage = () => {
                     <h3 className="text-lg font-bold text-gray-900 mt-1">{attributes.name || 'Producto sin nombre'}</h3>
                     <p className="text-sm text-gray-600 mt-2 line-clamp-2">{attributes.description || 'Sin descripción'}</p>
                     {priceValue !== undefined && priceValue !== null && (
-                      <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="mt-4 pt-4 border-t border-gray-100 hidden" aria-hidden="true">
                         <span className="text-lg font-bold text-brand-red">${priceValue}</span>
                       </div>
                     )}

@@ -95,7 +95,12 @@ export async function getCategories() {
 
 // Locations
 export async function getLocations() {
-  const response = await get<StrapiEntity<any>[]>('/locations', { 'populate': '*' });
+  const params = {
+    'populate': '*',
+    'filters[active][$eq]': 'true',
+    'sort': 'order:asc,name:asc',
+  };
+  const response = await get<StrapiEntity<any>[]>('/locations', params);
   return response.data;
 }
 

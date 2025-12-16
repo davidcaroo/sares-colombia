@@ -536,6 +536,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     address: Schema.Attribute.String;
     city: Schema.Attribute.String;
     coordinates: Schema.Attribute.JSON;
@@ -543,6 +544,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     department: Schema.Attribute.String;
+    hours: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -550,10 +552,12 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
       'api::location.location'
     > &
       Schema.Attribute.Private;
+    map_url: Schema.Attribute.Text;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    opening_hours: Schema.Attribute.String;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<1>;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

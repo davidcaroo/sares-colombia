@@ -15,6 +15,9 @@
             "type": "string",
             "required": true
         },
+        "type": {
+            "type": "string"
+        },
         "address": {
             "type": "string"
         },
@@ -27,8 +30,11 @@
         "phone": {
             "type": "string"
         },
-        "opening_hours": {
+        "hours": {
             "type": "string"
+        },
+        "map_url": {
+            "type": "text"
         },
         "coordinates": {
             "type": "json"
@@ -39,6 +45,14 @@
             "allowedTypes": [
                 "images"
             ]
+        },
+        "order": {
+            "type": "integer",
+            "default": 1
+        },
+        "active": {
+            "type": "boolean",
+            "default": true
         }
     }
 }

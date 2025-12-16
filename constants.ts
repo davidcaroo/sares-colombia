@@ -1,4 +1,4 @@
-import { Product, Representative, Location, FaqItem } from './types';
+import { Product, Representative, Location, FaqItem, ContactInfo } from './types';
 
 export const PRODUCTS: Product[] = [
   {
@@ -148,6 +148,12 @@ export const LOCATIONS: Location[] = [
     image: 'https://picsum.photos/id/1076/600/400'
   }
 ];
+
+export const CONTACT_INFO_DEFAULT: ContactInfo = {
+  phone: '314 7260 433',
+  email: 'administracion@sarescol.com',
+  address: 'Centro Comercial e Industrial Ternera 1, Bodega 52, Outlet Sares',
+};
 
 export const FAQS: FaqItem[] = [
   {

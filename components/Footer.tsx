@@ -1,16 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, MapPin, Phone, Mail } from 'lucide-react';
+import { useContactInfo } from '../hooks/useContactInfo';
 
 const Footer = () => {
+  const { contactInfo } = useContactInfo();
+
   return (
     <footer className="bg-white text-gray-800 pt-12 pb-6 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="mb-4">
-              <span 
-                className="text-5xl font-black text-brand-red leading-none tracking-tighter block" 
+              <span
+                className="text-5xl font-black text-brand-red leading-none tracking-tighter block"
                 style={{ fontFamily: '"Times New Roman", Times, serif' }}
               >
                 sares
@@ -51,20 +54,20 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-600">
               <li className="flex items-start gap-2">
                 <MapPin size={16} className="mt-1 flex-shrink-0 text-brand-red" />
-                <span>Centro Comercial e Industrial Ternera 1, Bodega 52, Outlet Sares</span>
+                <span>{contactInfo.address}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="text-brand-red" />
-                <span>314 7260 433</span>
+                <span>{contactInfo.phone}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={16} className="text-brand-red" />
-                <span>administracion@sarescol.com</span>
+                <span>{contactInfo.email}</span>
               </li>
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
           <p>&copy; {new Date().getFullYear()} Sares Colombia S.A.S. Todos los derechos reservados.</p>
           <p>
