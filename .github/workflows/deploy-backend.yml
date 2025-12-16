@@ -1,0 +1,85 @@
+name: Deploy Backend Strapi
+
+on:
+    push:
+        branches: [main]
+        paths:
+            - "backend/**"
+            - ".github/workflows/deploy-backend.yml"
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  cache: "npm"
+                  cache-dependency-path: backend/package-lock.json
+
+            - name: Install dependencies
+              working-directory: backend
+              run: npm ci --production
+
+            - name: Build Strapi
+              working-directory: backend
+              run: npm run build
+              env:
+                  NODE_ENV: production
+
+            - name: Create .env file for production
+              working-directory: backend
+              run: |
+                  cat > .env << EOF
+                  HOST=0.0.0.0
+                  PORT=1337
+                  APP_KEYS=${{ secrets.STRAPI_APP_KEYS }}
+                  API_TOKEN_SALT=${{ secrets.STRAPI_API_TOKEN_SALT }}
+                  ADMIN_JWT_SECRET=${{ secrets.STRAPI_ADMIN_JWT_SECRET }}
+                  TRANSFER_TOKEN_SALT=${{ secrets.STRAPI_TRANSFER_TOKEN_SALT }}
+                  JWT_SECRET=${{ secrets.STRAPI_JWT_SECRET }}
+                  DATABASE_CLIENT=mysql
+                  DATABASE_HOST=localhost
+                  DATABASE_PORT=3306
+                  DATABASE_NAME=${{ secrets.DB_NAME }}
+                  DATABASE_USERNAME=${{ secrets.DB_USERNAME }}
+                  DATABASE_PASSWORD=${{ secrets.DB_PASSWORD }}
+                  DATABASE_SSL=false
+                  URL=https://api.sarescol.com
+                  ADMIN_URL=https://api.sarescol.com/admin
+                  FRONTEND_URL=https://sarescol.com
+                  NODE_ENV=production
+                  EOF
+
+            - name: Deploy to Hostinger via SCP
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USER }}
+                  key: ${{ secrets.SSH_KEY }}
+                  port: 65002
+                  source: "backend/*"
+                  target: "/home/${{ secrets.USER }}/api.sarescol.com"
+                  strip_components: 1
+                  rm: false
+
+            - name: Restart Strapi with PM2
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USER }}
+                  key: ${{ secrets.SSH_KEY }}
+                  port: 65002
+                  script: |
+                      export NVM_DIR="$HOME/.nvm"
+                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                      cd /home/${{ secrets.USER }}/api.sarescol.com
+                      npm install --production
+                      pm2 delete strapi || true
+                      pm2 start npm --name strapi -- start
+                      pm2 save
