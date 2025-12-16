@@ -23,8 +23,8 @@ const Footer = () => {
               Distribuidor autorizado de havaianas con más de 15 años de experiencia llevando confort y estilo a todo el territorio nacional.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-brand-red"><Facebook size={20} /></a>
-              <a href="#" className="text-gray-400 hover:text-brand-red"><Instagram size={20} /></a>
+              <a href="https://www.facebook.com/sarescommercial" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-red"><Facebook size={20} /></a>
+              <a href="https://www.instagram.com/sarescommercial/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-red"><Instagram size={20} /></a>
             </div>
           </div>
 
