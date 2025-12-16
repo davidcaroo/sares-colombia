@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle, MapPin, Phone, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
-import { REPRESENTATIVES, PRODUCTS } from '../constants';
 import ClientLogo from '../components/ClientLogo';
 import { getBanners, getStrapiImageUrl, getFeaturedProducts, getAllies, getRepresentatives } from '../services/strapi';
 
@@ -19,46 +18,6 @@ const HomePage = () => {
   const [representatives, setRepresentatives] = useState<any[]>([]);
   const [representativesLoading, setRepresentativesLoading] = useState(true);
   const [representativesError, setRepresentativesError] = useState<string | null>(null);
-
-  const fallbackFeatured = useMemo(() => {
-    return PRODUCTS.slice(0, 4).map(product => ({
-      id: product.id,
-      attributes: {
-        name: product.name,
-        collectionLabel: product.collection,
-        colors: product.colors,
-        description: product.description,
-        images: {
-          data: [
-            {
-              attributes: { url: product.image },
-            },
-          ],
-        },
-        category: {
-          data: {
-            attributes: { name: product.category },
-          },
-        },
-      },
-    }));
-  }, []);
-
-  const fallbackAllies = useMemo(
-    () => [
-      { id: 'ally-1', name: 'Grupo Éxito', color: 'text-yellow-500' },
-      { id: 'ally-2', name: 'Falabella', color: 'text-green-700' },
-      { id: 'ally-3', name: 'Jumbo', color: 'text-green-500' },
-      { id: 'ally-4', name: 'Alkosto', color: 'text-orange-500' },
-      { id: 'ally-5', name: 'Olímpica', color: 'text-blue-600' },
-      { id: 'ally-6', name: 'Pepe Ganga', color: 'text-purple-600' },
-      { id: 'ally-7', name: 'Sodimac', color: 'text-blue-800' },
-      { id: 'ally-8', name: 'Farmatodo', color: 'text-blue-500' },
-    ],
-    []
-  );
-
-  const fallbackRepresentatives = useMemo(() => REPRESENTATIVES, []);
 
   // Lógica para auto-scroll en móvil
   useEffect(() => {
@@ -218,65 +177,22 @@ const HomePage = () => {
       .filter(rep => rep.attributes);
   }, [representatives]);
 
-  const featuredCards = useMemo(() => {
-    if (normalizedFeatured.length >= 4) {
-      return normalizedFeatured.slice(0, 4);
-    }
+  const featuredDisplay = useMemo(() => {
+    return normalizedFeatured.slice(0, 4);
+  }, [normalizedFeatured]);
 
-    if (normalizedFeatured.length > 0) {
-      const missing = 4 - normalizedFeatured.length;
-      return [...normalizedFeatured, ...fallbackFeatured.slice(0, missing)];
+  const featuredSkeletonCount = useMemo(() => {
+    if (featuredLoading) {
+      return 4;
     }
-
-    return fallbackFeatured;
-  }, [normalizedFeatured, fallbackFeatured]);
-
-  const alliesToShow = useMemo(() => {
-    if (normalizedAllies.length > 0) {
-      return normalizedAllies;
-    }
-    return fallbackAllies.map(ally => ({
-      id: ally.id,
-      attributes: {
-        name: ally.name,
-        logo: null,
-        website: null,
-        color: ally.color,
-      },
-    }));
-  }, [normalizedAllies, fallbackAllies]);
+    const missing = 4 - featuredDisplay.length;
+    return missing > 0 ? missing : 0;
+  }, [featuredLoading, featuredDisplay.length]);
 
   const marqueeAllies = useMemo(() => {
-    if (alliesToShow.length === 0) return [];
-    return [...alliesToShow, ...alliesToShow];
-  }, [alliesToShow]);
-
-  const representativesToShow = useMemo(() => {
-    if (normalizedRepresentatives.length > 0) {
-      return normalizedRepresentatives;
-    }
-
-    return fallbackRepresentatives.map(rep => ({
-      id: rep.id,
-      attributes: {
-        name: rep.name,
-        role: rep.role,
-        zone: rep.zone,
-        phone: rep.phone,
-        email: rep.email,
-        address: rep.address,
-        image: {
-          data: [
-            {
-              attributes: {
-                url: rep.image,
-              },
-            },
-          ],
-        },
-      },
-    }));
-  }, [normalizedRepresentatives, fallbackRepresentatives]);
+    if (normalizedAllies.length === 0) return [];
+    return [...normalizedAllies, ...normalizedAllies];
+  }, [normalizedAllies]);
 
   useEffect(() => {
     if (heroIndex >= normalizedBanners.length && normalizedBanners.length > 0) {
@@ -293,12 +209,11 @@ const HomePage = () => {
   }, [normalizedBanners.length]);
 
   const activeBanner = normalizedBanners[heroIndex] || null;
-  const heroImage = activeBanner
-    ? getStrapiImageUrl(activeBanner.attributes.image?.data ?? activeBanner.attributes.image)
-    : null;
-  const heroTitle = activeBanner?.attributes?.title || 'Distribuidor Autorizado Havaianas en Colombia';
-  const heroSubtitle = activeBanner?.attributes?.subtitle || 'Más de 15 años llevando la originalidad y el confort de Brasil a cada rincón del país.';
+  const heroImage = activeBanner ? getStrapiImageUrl(activeBanner.attributes.image?.data ?? activeBanner.attributes.image) : null;
+  const heroTitle = activeBanner?.attributes?.title || '';
+  const heroSubtitle = activeBanner?.attributes?.subtitle || '';
   const heroLink = activeBanner?.attributes?.link || null;
+  const showHeroSkeleton = !activeBanner;
 
   const manualScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -315,44 +230,68 @@ const HomePage = () => {
         {/* Background Image Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
-          style={{ backgroundImage: `url("${heroImage || 'https://picsum.photos/id/103/1920/1080'}")`, filter: 'brightness(0.6)' }}
+          style={{
+            backgroundImage: heroImage ? `url("${heroImage}")` : undefined,
+            filter: heroImage ? 'brightness(0.6)' : undefined,
+            backgroundColor: heroImage ? undefined : '#111827',
+          }}
         ></div>
 
         <div className="relative z-10 text-center text-white px-4 max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">
-            {heroTitle.split('Havaianas').length > 1 ? (
-              <>
-                {heroTitle.split('Havaianas')[0]}
-                <span className="text-brand-yellow">Havaianas</span>
-                {heroTitle.split('Havaianas')[1]}
-              </>
-            ) : (
-              heroTitle
-            )}
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 font-light">
-            {heroSubtitle}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {heroLink ? (
-              <a
-                href={heroLink}
-                target={heroLink.startsWith('http') ? '_blank' : undefined}
-                rel={heroLink.startsWith('http') ? 'noreferrer' : undefined}
-                className="bg-brand-red text-white px-8 py-3 rounded-md text-lg font-bold hover:bg-red-700 transition flex items-center justify-center gap-2"
-              >
-                Conocer más <ArrowRight size={20} />
-              </a>
-            ) : (
-              <Link to="/reps" className="bg-brand-red text-white px-8 py-3 rounded-md text-lg font-bold hover:bg-red-700 transition flex items-center justify-center gap-2">
-                Conocer más <ArrowRight size={20} />
-              </Link>
-            )}
-          </div>
+          {showHeroSkeleton ? (
+            <div className="space-y-6 animate-pulse">
+              <div className="w-11/12 mx-auto h-12 bg-white/30 rounded" />
+              <div className="w-8/12 mx-auto h-4 bg-white/20 rounded" />
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+                <div className="h-12 w-48 bg-white/25 rounded-full" />
+                <div className="h-12 w-48 bg-white/10 rounded-full" />
+              </div>
+            </div>
+          ) : (
+            <>
+              {heroTitle && (
+                <h1 className="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">
+                  {heroTitle.includes('Havaianas') ? (
+                    <>
+                      {heroTitle.split('Havaianas')[0]}
+                      <span className="text-brand-yellow">Havaianas</span>
+                      {heroTitle.split('Havaianas').slice(1).join('Havaianas')}
+                    </>
+                  ) : (
+                    heroTitle
+                  )}
+                </h1>
+              )}
+
+              {heroSubtitle && (
+                <p className="text-xl md:text-2xl mb-8 font-light">
+                  {heroSubtitle}
+                </p>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                {heroLink ? (
+                  <a
+                    href={heroLink}
+                    target={heroLink.startsWith('http') ? '_blank' : undefined}
+                    rel={heroLink.startsWith('http') ? 'noreferrer' : undefined}
+                    className="bg-brand-red text-white px-8 py-3 rounded-md text-lg font-bold hover:bg-red-700 transition flex items-center justify-center gap-2"
+                  >
+                    Conocer más <ArrowRight size={20} />
+                  </a>
+                ) : (
+                  <Link to="/reps" className="bg-brand-red text-white px-8 py-3 rounded-md text-lg font-bold hover:bg-red-700 transition flex items-center justify-center gap-2">
+                    Conocer más <ArrowRight size={20} />
+                  </Link>
+                )}
+              </div>
+            </>
+          )}
+
           {bannerError && (
             <p className="mt-4 text-sm text-white/70">{bannerError}</p>
           )}
-          {normalizedBanners.length > 1 && (
+          {!showHeroSkeleton && normalizedBanners.length > 1 && (
             <div className="flex justify-center gap-2 mt-8">
               {normalizedBanners.map((_, index) => (
                 <button
@@ -381,7 +320,7 @@ const HomePage = () => {
           <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
           <div className="flex items-center animate-infinite-scroll w-max">
-            {alliesLoading && normalizedAllies.length === 0 ? (
+            {alliesLoading || normalizedAllies.length === 0 ? (
               Array.from({ length: 8 }).map((_, index) => (
                 <div
                   key={`ally-skeleton-${index}`}
@@ -437,7 +376,7 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {representativesLoading && normalizedRepresentatives.length === 0
+            {representativesLoading || normalizedRepresentatives.length === 0
               ? Array.from({ length: 3 }).map((_, index) => (
                 <div key={`rep-skeleton-${index}`} className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 animate-pulse">
                   <div className="flex items-start gap-4">
@@ -450,7 +389,7 @@ const HomePage = () => {
                   </div>
                 </div>
               ))
-              : representativesToShow.map(rep => {
+              : normalizedRepresentatives.map(rep => {
                 const attributes = rep.attributes || {};
                 const imageSource = attributes.image?.data ?? attributes.image;
                 const imageUrl = getStrapiImageUrl(imageSource) || 'https://picsum.photos/seed/rep/200';
@@ -539,8 +478,60 @@ const HomePage = () => {
               className="flex overflow-x-auto pb-6 gap-6 snap-x snap-mandatory md:grid md:grid-cols-4 md:overflow-visible md:pb-0 scrollbar-hide"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {featuredLoading ? (
-                Array.from({ length: 4 }).map((_, index) => (
+              {featuredDisplay.map((product, index) => {
+                const attributes = product.attributes || {};
+                const imageSource = attributes.images?.data ?? attributes.images;
+                const imageUrl = getStrapiImageUrl(imageSource) || 'https://picsum.photos/seed/havaianas/500/500';
+                const collectionLabel = attributes.collectionLabel || attributes.category?.data?.attributes?.name || 'Colección';
+                const categoryLabel = attributes.category?.data?.attributes?.name || 'Unisex';
+                const colorsValue = attributes.colors;
+                const colorList = Array.isArray(colorsValue)
+                  ? colorsValue
+                  : typeof colorsValue === 'string'
+                    ? colorsValue.split(',').map((color: string) => color.trim()).filter(Boolean)
+                    : [];
+                const colorCount = colorList.length;
+                const productName = attributes.name || 'Producto Havaianas';
+
+                return (
+                  <Link
+                    key={`${product.id ?? 'featured'}-${index}`}
+                    to="/catalog"
+                    className="min-w-[280px] md:min-w-0 snap-center group block bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100"
+                  >
+                    <div className="relative overflow-hidden aspect-square bg-gray-100">
+                      <img
+                        src={imageUrl}
+                        alt={productName}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-out"
+                      />
+                      <div className="absolute top-3 left-3 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                        {collectionLabel}
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">{categoryLabel}</span>
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-brand-red transition-colors mb-2">{productName}</h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex -space-x-1">
+                          {colorList.slice(0, 3).map((color: string, i: number) => (
+                            <div key={i} className="w-4 h-4 rounded-full border border-white bg-gray-300" title={color}></div>
+                          ))}
+                          {colorCount > 3 && (
+                            <div className="w-4 h-4 rounded-full border border-white bg-gray-100 text-[8px] flex items-center justify-center font-bold">
+                              +
+                            </div>
+                          )}
+                        </div>
+                        <span>{colorCount > 0 ? `${colorCount} Colores` : 'Consulta referencias'}</span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+
+              {featuredSkeletonCount > 0 &&
+                Array.from({ length: featuredSkeletonCount }).map((_, index) => (
                   <div
                     key={`featured-skeleton-${index}`}
                     className="min-w-[280px] md:min-w-0 snap-center bg-gray-50 rounded-xl overflow-hidden border border-gray-100 animate-pulse"
@@ -552,60 +543,7 @@ const HomePage = () => {
                       <div className="w-28 h-3 bg-gray-200 rounded" />
                     </div>
                   </div>
-                ))
-              ) : (
-                featuredCards.map((product, index) => {
-                  const attributes = product.attributes || {};
-                  const imageSource = attributes.images?.data ?? attributes.images;
-                  const imageUrl = getStrapiImageUrl(imageSource) || 'https://picsum.photos/seed/havaianas/500/500';
-                  const collectionLabel = attributes.collectionLabel || attributes.category?.data?.attributes?.name || 'Colección';
-                  const categoryLabel = attributes.category?.data?.attributes?.name || 'Unisex';
-                  const colorsValue = attributes.colors;
-                  const colorList = Array.isArray(colorsValue)
-                    ? colorsValue
-                    : typeof colorsValue === 'string'
-                      ? colorsValue.split(',').map((color: string) => color.trim()).filter(Boolean)
-                      : [];
-                  const colorCount = colorList.length;
-                  const productName = attributes.name || 'Producto Havaianas';
-
-                  return (
-                    <Link
-                      key={`${product.id ?? 'featured'}-${index}`}
-                      to="/catalog"
-                      className="min-w-[280px] md:min-w-0 snap-center group block bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100"
-                    >
-                      <div className="relative overflow-hidden aspect-square bg-gray-100">
-                        <img
-                          src={imageUrl}
-                          alt={productName}
-                          className="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-out"
-                        />
-                        <div className="absolute top-3 left-3 bg-brand-red text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                          {collectionLabel}
-                        </div>
-                      </div>
-                      <div className="p-5">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">{categoryLabel}</span>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-brand-red transition-colors mb-2">{productName}</h3>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <div className="flex -space-x-1">
-                            {colorList.slice(0, 3).map((color: string, i: number) => (
-                              <div key={i} className="w-4 h-4 rounded-full border border-white bg-gray-300" title={color}></div>
-                            ))}
-                            {colorCount > 3 && (
-                              <div className="w-4 h-4 rounded-full border border-white bg-gray-100 text-[8px] flex items-center justify-center font-bold">
-                                +
-                              </div>
-                            )}
-                          </div>
-                          <span>{colorCount > 0 ? `${colorCount} Colores` : 'Consulta referencias'}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })
-              )}
+                ))}
             </div>
 
             {/* CSS para ocultar scrollbar en Webkit (Chrome, Safari, etc) */}

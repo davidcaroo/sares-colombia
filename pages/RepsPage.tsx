@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
-import { REPRESENTATIVES } from '../constants';
 import { getRepresentatives, getStrapiImageUrl } from '../services/strapi';
 
 const RepsPage = () => {
@@ -43,33 +42,6 @@ const RepsPage = () => {
       .filter(rep => rep.attributes);
   }, [representatives]);
 
-  const repsToShow = useMemo(() => {
-    if (normalizedRepresentatives.length > 0) {
-      return normalizedRepresentatives;
-    }
-
-    return REPRESENTATIVES.map(rep => ({
-      id: rep.id,
-      attributes: {
-        name: rep.name,
-        role: rep.role,
-        zone: rep.zone,
-        phone: rep.phone,
-        email: rep.email,
-        whatsapp: rep.phone,
-        image: {
-          data: [
-            {
-              attributes: {
-                url: rep.image,
-              },
-            },
-          ],
-        },
-      },
-    }));
-  }, [normalizedRepresentatives]);
-
   return (
     <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,7 +50,7 @@ const RepsPage = () => {
           <p className="text-center text-red-500 mb-6">{error}</p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loading && normalizedRepresentatives.length === 0
+          {loading || normalizedRepresentatives.length === 0
             ? Array.from({ length: 3 }).map((_, index) => (
               <div key={`rep-skeleton-${index}`} className="border border-gray-200 rounded-lg p-6 flex flex-col items-center text-center bg-white animate-pulse">
                 <div className="w-24 h-24 rounded-full bg-gray-200 mb-4" />
@@ -88,7 +60,7 @@ const RepsPage = () => {
                 <div className="w-3/4 h-3 bg-gray-200 rounded" />
               </div>
             ))
-            : repsToShow.map(rep => {
+            : normalizedRepresentatives.map(rep => {
               const attributes = rep.attributes || {};
               const imageSource = attributes.image?.data ?? attributes.image;
               const imageUrl = getStrapiImageUrl(imageSource) || 'https://picsum.photos/seed/rep/200';
