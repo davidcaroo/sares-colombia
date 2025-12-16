@@ -74,6 +74,8 @@ jobs:
                   target: "/home/${{ secrets.USER }}/api.sarescol.com"
                   strip_components: 1
                   rm: false
+                  timeout: 120s
+                  command_timeout: 15m
 
             - name: Restart Strapi with PM2
               uses: appleboy/ssh-action@v1.0.0
