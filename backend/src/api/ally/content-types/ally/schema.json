@@ -1,0 +1,38 @@
+{
+    "kind": "collectionType",
+    "collectionName": "allies",
+    "info": {
+        "singularName": "ally",
+        "pluralName": "allies",
+        "displayName": "Ally",
+        "description": "Aliados estratégicos que muestran su logo en el sitio"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "website": {
+            "type": "string"
+        },
+        "logo": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images"
+            ],
+            "required": true
+        },
+        "order": {
+            "type": "integer",
+            "default": 1
+        },
+        "active": {
+            "type": "boolean",
+            "default": true
+        }
+    }
+}

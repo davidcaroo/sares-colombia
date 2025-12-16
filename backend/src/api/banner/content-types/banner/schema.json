@@ -1,0 +1,38 @@
+{
+    "kind": "collectionType",
+    "collectionName": "banners",
+    "info": {
+        "singularName": "banner",
+        "pluralName": "banners",
+        "displayName": "Banner",
+        "description": "Hero banners / sliders"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "subtitle": {
+            "type": "string"
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "link": {
+            "type": "string"
+        },
+        "order": {
+            "type": "integer"
+        },
+        "active": {
+            "type": "boolean",
+            "default": true
+        }
+    }
+}

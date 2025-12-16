@@ -1,0 +1,61 @@
+{
+    "kind": "collectionType",
+    "collectionName": "representatives",
+    "info": {
+        "singularName": "representative",
+        "pluralName": "representatives",
+        "displayName": "Representative",
+        "description": "Sales representatives"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "email": {
+            "type": "email"
+        },
+        "phone": {
+            "type": "string"
+        },
+        "role": {
+            "type": "string"
+        },
+        "zone": {
+            "type": "string"
+        },
+        "address": {
+            "type": "string"
+        },
+        "city": {
+            "type": "string"
+        },
+        "department": {
+            "type": "string"
+        },
+        "whatsapp": {
+            "type": "string"
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images"
+            ]
+        },
+        "bio": {
+            "type": "richtext"
+        },
+        "order": {
+            "type": "integer",
+            "default": 1
+        },
+        "active": {
+            "type": "boolean",
+            "default": true
+        }
+    }
+}
