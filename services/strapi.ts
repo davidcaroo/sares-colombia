@@ -60,6 +60,37 @@ async function get<T>(endpoint: string, params?: Record<string, string>): Promis
   };
 }
 
+async function post(endpoint: string, body: Record<string, unknown>) {
+  const url = `${API_BASE}${endpoint}`;
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (STRAPI_TOKEN) {
+    headers['Authorization'] = `Bearer ${STRAPI_TOKEN}`;
+  }
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    let message = `Strapi API error: ${response.status} ${response.statusText}`;
+    try {
+      const errorData = await response.json();
+      message = errorData?.error?.message || errorData?.message || message;
+    } catch (error) {
+      // ignore JSON parse errors
+    }
+    throw new Error(message);
+  }
+
+  const data = await response.json().catch(() => ({}));
+  return data;
+}
+
 // Products
 export async function getProducts(categorySlug?: string) {
   const params: Record<string, string> = { 'populate': '*' };
@@ -152,4 +183,10 @@ export function getStrapiImageUrl(imageData: any): string | null {
   const url = imageAttributes.url;
   // If URL is relative, prepend Strapi URL
   return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+}
+
+export type FormType = 'contact' | 'wholesale' | 'suggestion';
+
+export async function submitForm(formType: FormType, payload: Record<string, unknown>) {
+  return post(`/forms/${formType}`, payload);
 }

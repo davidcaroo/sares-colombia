@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { useContactInfo } from '../hooks/useContactInfo';
+import { submitForm } from '../services/strapi';
 
 const ContactPage = () => {
   const { contactInfo, loading, error } = useContactInfo();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormStatus('loading');
+    setFormError(null);
+
+    try {
+      await submitForm('contact', formData);
+      setFormStatus('success');
+      setFormData({ name: '', email: '', phone: '', message: '' });
+    } catch (err: any) {
+      setFormStatus('error');
+      setFormError(err?.message || 'No pudimos enviar tu mensaje. Intenta de nuevo.');
+    }
+  };
 
   return (
     <div className="bg-white py-12">
@@ -14,38 +43,67 @@ const ContactPage = () => {
             <p className="text-gray-600 mb-8">
               ¿Tienes dudas o quieres realizar un pedido? Completa el formulario y nuestro equipo te responderá en breve.
             </p>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Nombre Completo</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="contact-name">Nombre Completo</label>
                 <input
                   type="text"
+                  id="contact-name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-1 outline-none p-3 border bg-white text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="contact-email">Email</label>
                 <input
                   type="email"
+                  id="contact-email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-1 outline-none p-3 border bg-white text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Teléfono</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="contact-phone">Teléfono</label>
                 <input
                   type="tel"
+                  id="contact-phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-1 outline-none p-3 border bg-white text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Mensaje</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="contact-message">Mensaje</label>
                 <textarea
                   rows={4}
+                  id="contact-message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-red focus:ring-brand-red focus:ring-1 outline-none p-3 border bg-white text-gray-900"
                 ></textarea>
               </div>
-              <button type="submit" className="w-full bg-brand-red text-white px-4 py-2 rounded-md font-bold hover:bg-red-700 transition">
-                Enviar Mensaje
+              <button
+                type="submit"
+                disabled={formStatus === 'loading'}
+                className={`w-full bg-brand-red text-white px-4 py-2 rounded-md font-bold transition ${formStatus === 'loading' ? 'opacity-70 cursor-not-allowed' : 'hover:bg-red-700'}`}
+              >
+                {formStatus === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
               </button>
+              {formStatus === 'success' && (
+                <p className="text-sm text-green-600 text-center">¡Gracias! Hemos recibido tu mensaje.</p>
+              )}
+              {formStatus === 'error' && formError && (
+                <p className="text-sm text-red-600 text-center">{formError}</p>
+              )}
             </form>
           </div>
           <div className="flex flex-col justify-center space-y-8">
