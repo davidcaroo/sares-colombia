@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { MapPin, Phone } from 'lucide-react';
+import { MapPin, Phone, Clock } from 'lucide-react';
 import { LOCATIONS } from '../constants';
 import { getLocations, getStrapiImageUrl } from '../services/strapi';
 
@@ -149,7 +149,7 @@ const LocationsPage = () => {
                         <Phone size={18} className="text-brand-red" /> {phoneValue}
                       </p>
                       <p className="flex items-center gap-2">
-                        <span className="w-[18px] text-center font-bold text-brand-red">🕒</span> {hoursValue}
+                        <Clock size={18} className="text-brand-red" /> {hoursValue}
                       </p>
                     </div>
                   </div>

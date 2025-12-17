@@ -10,7 +10,7 @@ const Navbar = () => {
     { name: 'Inicio', path: '/' },
     { name: 'Nosotros', path: '/about' },
     { name: 'Catálogo', path: '/catalog' },
-    { name: 'Mayoristas', path: '/wholesale' },
+    { name: 'Canal Distributivo B2C', path: '/wholesale' },
     { name: 'Representantes', path: '/reps' },
     { name: 'Ubicaciones', path: '/locations' },
     { name: 'Recursos', path: '/resources' },
@@ -34,8 +34,8 @@ const Navbar = () => {
             <Link to="/" className="flex-shrink-0 flex items-center group">
               {/* Logo Implementation matching the "sares" red text style */}
               <div className="flex flex-col justify-center">
-                <span 
-                  className="text-5xl font-black text-brand-red leading-none tracking-tighter transition-transform group-hover:scale-105" 
+                <span
+                  className="text-5xl font-black text-brand-red leading-none tracking-tighter transition-transform group-hover:scale-105"
                   style={{ fontFamily: '"Times New Roman", Times, serif', paddingBottom: '4px' }}
                 >
                   sares
@@ -53,9 +53,8 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-brand-red ${
-                  location.pathname === link.path ? 'text-brand-red border-b-2 border-brand-red' : 'text-gray-700'
-                }`}
+                className={`text-sm font-medium transition-colors hover:text-brand-red ${location.pathname === link.path ? 'text-brand-red border-b-2 border-brand-red' : 'text-gray-700'
+                  }`}
               >
                 {link.name}
               </Link>
@@ -82,9 +81,8 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  location.pathname === link.path ? 'bg-red-50 text-brand-red' : 'text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${location.pathname === link.path ? 'bg-red-50 text-brand-red' : 'text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 {link.name}
               </Link>

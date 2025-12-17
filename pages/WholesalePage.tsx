@@ -43,9 +43,9 @@ const WholesalePage = () => {
     <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Ventas al Por Mayor</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">¿Listo para llevar havaianas® a tu negocio?</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Beneficios exclusivos para distribuidores autorizados. Haz crecer tu negocio con Havaianas.
+            Serás un aliado estratégico de la marca de sandalias más grande del mundo.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ const WholesalePage = () => {
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">Solicitud de Convenio</h2>
             <p className="text-gray-600 text-lg">
-              ¿Quieres vender Havaianas en tu negocio? Completa el siguiente formulario para evaluar tu perfil.
+              ¿Quieres vender havaianas® en tu negocio? Completa el siguiente formulario para evaluar tu perfil.
             </p>
           </div>
 
@@ -214,7 +214,7 @@ const WholesalePage = () => {
 
         {/* --- Process Steps Section --- */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">Tu camino para ser Distribuidor</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-16">Tu camino para ser parte de la familia havaianas®</h2>
 
           <div className="relative">
             {/* Connecting Line (Desktop) */}
@@ -251,7 +251,7 @@ const WholesalePage = () => {
                   <Handshake className="text-brand-red w-10 h-10" />
                 </div>
                 <span className="text-brand-red font-black text-4xl mb-2 opacity-20">03</span>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Alianza Havaianas</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Alianza havaianas®</h3>
                 <p className="text-gray-600 leading-relaxed">
                   ¡Listo! Empiezas a ser un aliado oficial y accedes a nuestro catálogo exclusivo.
                 </p>
