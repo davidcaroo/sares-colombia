@@ -20,7 +20,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-600 text-sm mb-4">
-              Distribuidor autorizado de havaianas con más de 15 años de experiencia llevando confort y estilo a todo el territorio nacional.
+              Distribuidor autorizado de havaianas® con más de 15 años de experiencia llevando confort y estilo a todo el territorio nacional.
             </p>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/sarescommercial" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-red"><Facebook size={20} /></a>

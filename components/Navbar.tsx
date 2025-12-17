@@ -25,7 +25,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       {/* Top Bar */}
       <div className="bg-brand-red text-white py-1 px-4 text-xs md:text-sm text-center font-medium">
-        Distribuidor Autorizado Havaianas en Colombia | Envíos a todo el país
+        Distribuidor Autorizado havaianas® en Colombia para el canal B2C | Envíos a todo el país
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

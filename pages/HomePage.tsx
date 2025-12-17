@@ -447,8 +447,8 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-10 px-2">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Favoritos de la Temporada</h2>
-              <p className="text-gray-600">Descubre los modelos icónicos que definen el estilo Havaianas.</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Productos de colección</h2>
+              <p className="text-gray-600">Descubre los modelos icónicos que definen el estilo havaianas®.</p>
             </div>
             <Link to="/catalog" className="hidden md:flex items-center gap-1 text-brand-red font-bold hover:text-red-700 transition group">
               Ver todo el catálogo <ArrowRight size={20} className="transform group-hover:translate-x-1 transition-transform" />
