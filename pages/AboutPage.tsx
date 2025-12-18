@@ -19,6 +19,30 @@ const AboutPage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Manager Message Section */}
+        <div className="flex flex-col md:flex-row gap-12 items-center mb-24">
+          <div className="md:w-2/5 flex justify-center">
+            <img
+              src="/gerente.png"
+              alt="Gerente Sares Colombia"
+              className="w-64 h-64 md:w-80 md:h-80 object-cover"
+            />
+          </div>
+          <div className="md:w-3/5">
+            <div className="prose prose-lg leading-relaxed">
+              <p className="text-lg md:text-xl italic text-brand-red mb-6 font-semibold">
+                "Ser parte de Sares es más que un trabajo, es un compromiso con la excelencia y la pasión por llevar alegría a cada paso de nuestros clientes."
+              </p>
+              <p className="text-base md:text-lg text-gray-700">
+                Como aliado estratégico de havaianas® en Colombia, nos enorgullece representar una marca que trasciende fronteras y culturas. Cada día trabajamos con dedicación para que más colombianos experimenten la comodidad, calidad y estilo que solo havaianas® puede ofrecer.
+              </p>
+              <p className="text-base md:text-lg text-gray-700 mt-4">
+                Formar parte de esta familia significa creer en la sostenibilidad, en la autenticidad y en el poder de las pequeñas cosas que transforman la vida cotidiana. Juntos, construimos experiencias memorables y duraderas que van más allá de un simple producto: creamos estilos de vida.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Section 1: Sares Content with Logo */}
         <div className="flex flex-col md:flex-row gap-16 items-center mb-24">
           <div className="md:w-1/2 order-2 md:order-1">
@@ -40,7 +64,7 @@ const AboutPage = () => {
             <div className="w-full max-w-md p-6 border border-gray-100 rounded-2xl shadow-sm bg-white flex flex-col items-center justify-center hover:shadow-md transition-shadow group">
               <img src="/Sares-autorizado.jpeg" alt="Sares distribuidor autorizado" className="w-48 h-48 object-contain" />
               <div className="mt-4 text-center">
-                <h3 className="text-xl font-semibold text-gray-800">Distribuidor autorizado</h3>
+                <img src="/authorized-seal.webp" alt="Authorized" className="w-16 h-16 object-contain mx-auto opacity-70" />
               </div>
             </div>
           </div>
