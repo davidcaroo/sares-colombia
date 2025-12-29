@@ -1,31 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getProducts, getStrapiImageUrl } from '../services/strapi';
+import { getStrapiImageUrl } from '../services/strapi';
 
 const CatalogPage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryFilter = searchParams.get('cat');
 
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const staticProducts = [
+    {
+      id: 'p1',
+      name: 'Sandalias Havaianas Harry Potter FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p2',
+      name: 'Chanclas Havaianas Urban Basic Material FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p3',
+      name: 'Sandalias Havaianas Super Coast FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p4',
+      name: 'Sandalias Havaianas Top Naruto FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p5',
+      name: 'Sandalias Havaianas Top Naruto FC PR',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p6',
+      name: 'Sandalias Havaianas Track Plus FCPR',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p7',
+      name: 'Sandalias Havaianas Track Plus FCPR',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p8',
+      name: 'Sandalias Havaianas Simpson',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    // Add all other products here
+  ];
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        setLoading(true);
-        const data = await getProducts(categoryFilter || undefined);
-        setProducts(data);
-      } catch (err: any) {
-        setError(err.message || 'Error al cargar productos');
-        console.error('Error fetching products:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
-  }, [categoryFilter]);
+  const [products, setProducts] = useState<any[]>(staticProducts);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const normalizedProducts = (products || [])
     .filter(Boolean)
@@ -70,7 +114,7 @@ const CatalogPage = () => {
                 const imagesData = attributes.images?.data ?? attributes.images;
                 const imageUrl = getStrapiImageUrl(imagesData);
                 const categoryData = attributes.category?.data?.attributes || attributes.category;
-                const categoryName = categoryData?.name || 'Sin categoría';
+                const categoryName = categoryData?.name || 'Hombres';
                 const priceValue = attributes.price ?? attributes.Price;
 
                 return (
