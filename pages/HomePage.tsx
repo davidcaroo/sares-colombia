@@ -182,7 +182,11 @@ const HomePage = () => {
   }, [normalizedBanners.length]);
 
   const activeBanner = normalizedBanners[heroIndex] || null;
-  const heroImage = activeBanner ? getStrapiImageUrl(activeBanner.attributes.image?.data ?? activeBanner.attributes.image) : null;
+  // Use Strapi banner if available, otherwise fallback to local static banner in public/
+  const staticHeroImage = '/banner-sares.webp';
+  const heroImage = activeBanner
+    ? getStrapiImageUrl(activeBanner.attributes.image?.data ?? activeBanner.attributes.image)
+    : staticHeroImage;
   const heroTitle = activeBanner?.attributes?.title || '';
   const heroSubtitle = activeBanner?.attributes?.subtitle || '';
   const heroLink = activeBanner?.attributes?.link || null;
