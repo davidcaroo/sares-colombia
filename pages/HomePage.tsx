@@ -183,13 +183,16 @@ const HomePage = () => {
 
   const activeBanner = normalizedBanners[heroIndex] || null;
   // Use Strapi banner if available, otherwise fallback to local static banner in public/
-  const staticHeroImage = '/banner-sares.webp';
+  const staticHeroImage = '/banner-sares.png';
   const heroImage = activeBanner
     ? getStrapiImageUrl(activeBanner.attributes.image?.data ?? activeBanner.attributes.image)
     : staticHeroImage;
-  const heroTitle = activeBanner?.attributes?.title || '';
-  const heroSubtitle = activeBanner?.attributes?.subtitle || '';
-  const heroLink = activeBanner?.attributes?.link || null;
+  const staticHeroTitle = '¡Bienvenido a Sares!';
+  const staticHeroSubtitle = 'Aliado estratégico de havaianas®';
+  const staticHeroLink = '/catalogo';
+  const heroTitle = activeBanner?.attributes?.title || staticHeroTitle;
+  const heroSubtitle = activeBanner?.attributes?.subtitle || staticHeroSubtitle;
+  const heroLink = activeBanner?.attributes?.link || staticHeroLink;
   // If we have any heroImage (including the static fallback) don't show skeleton
   const showHeroSkeleton = !heroImage;
 

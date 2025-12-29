@@ -1,40 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { MapPin, Phone, Clock } from 'lucide-react';
 import { LOCATIONS } from '../constants';
-import { getLocations, getStrapiImageUrl } from '../services/strapi';
+import { getStrapiImageUrl } from '../services/strapi';
 
 const LocationsPage = () => {
-  const [locations, setLocations] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [locations, setLocations] = useState<any[]>(LOCATIONS);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchLocations() {
-      try {
-        setLoading(true);
-        const data = await getLocations();
-        if (!isMounted) return;
-        setLocations(Array.isArray(data) ? data : []);
-        setError(null);
-      } catch (err: any) {
-        console.error('Error fetching locations:', err);
-        if (isMounted) {
-          setError('No se pudieron cargar las ubicaciones.');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    fetchLocations();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const normalizedLocations = useMemo(() => {
     return (locations || [])

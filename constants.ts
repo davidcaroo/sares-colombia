@@ -146,7 +146,7 @@ export const REPRESENTATIVES_STATIC: Representative[] = [
     address: '',
     phone: '+57 3243382470',
     email: 'sares.atlantico.comercial@gmail.com',
-    image: '/urbano-rojas.jpeg'
+    image: '/urbano-comercial.svg'
   },
   {
     id: 'r3',

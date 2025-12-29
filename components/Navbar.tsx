@@ -11,7 +11,7 @@ const Navbar = () => {
     { name: 'Nosotros', path: '/about' },
     { name: 'Catálogo', path: '/catalog' },
     { name: 'Canal Distributivo B2C', path: '/wholesale' },
-    { name: 'Representantes', path: '/reps' },
+    { name: 'Asesores Comerciales', path: '/reps' },
     { name: 'Ubicaciones', path: '/locations' },
     { name: 'Recursos', path: '/resources' },
     { name: 'Contacto', path: '/contact' },
