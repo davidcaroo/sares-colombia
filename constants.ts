@@ -126,6 +126,60 @@ export const REPRESENTATIVES: Representative[] = [
   }
 ];
 
+// Additional static representatives provided for initial launch (images expected in public/uploads/)
+export const REPRESENTATIVES_STATIC: Representative[] = [
+  {
+    id: 'r1',
+    name: 'Uverney Peña',
+    role: 'Líder Comercial',
+    zone: '',
+    address: '',
+    phone: '+57 3137001289',
+    email: 'sares.alianzas@gmail.com',
+    image: '/uverney-comercial.jpeg'
+  },
+  {
+    id: 'r2',
+    name: 'Urbano Rojas',
+    role: 'Representante de Ventas',
+    zone: 'Atlántico',
+    address: '',
+    phone: '+57 3243382470',
+    email: 'sares.atlantico.comercial@gmail.com',
+    image: '/urbano-rojas.jpeg'
+  },
+  {
+    id: 'r3',
+    name: 'Robinson Castaño',
+    role: 'Representante de Ventas',
+    zone: 'Sucre, Córdoba',
+    address: '',
+    phone: '+57 3147268406',
+    email: 'sares.cordoba.comercial@gmail.com',
+    image: '/robinson-comercial.svg'
+  },
+  {
+    id: 'r4',
+    name: 'Sandra Bocanegra',
+    role: 'Representante de Ventas',
+    zone: 'Magdalena',
+    address: '',
+    phone: '+57 3156429409',
+    email: 'sares.magdalena.comercial@gmail.com',
+    image: '/sandra-comercial.jpeg'
+  },
+  {
+    id: 'r5',
+    name: 'Wulfran Jimeno',
+    role: 'Representante Comercial',
+    zone: 'Bolívar',
+    address: '',
+    phone: '+57 3125779148',
+    email: 'comercial@sarescol.com',
+    image: '/wulfram-comercial.jpeg'
+  }
+];
+
 export const LOCATIONS: Location[] = [
   {
     id: '1',
