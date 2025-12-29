@@ -190,7 +190,8 @@ const HomePage = () => {
   const heroTitle = activeBanner?.attributes?.title || '';
   const heroSubtitle = activeBanner?.attributes?.subtitle || '';
   const heroLink = activeBanner?.attributes?.link || null;
-  const showHeroSkeleton = !activeBanner;
+  // If we have any heroImage (including the static fallback) don't show skeleton
+  const showHeroSkeleton = !heroImage;
 
   const manualScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -265,7 +266,9 @@ const HomePage = () => {
             </>
           )}
 
-          {bannerError && (
+          {/* Only show the banner error when we attempted to use a dynamic banner (activeBanner present). 
+              When using the static hero fallback we suppress the Strapi error message. */}
+          {bannerError && activeBanner && (
             <p className="mt-4 text-sm text-white/70">{bannerError}</p>
           )}
           {!showHeroSkeleton && normalizedBanners.length > 1 && (
