@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle, MapPin, Phone, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
 import ClientLogo from '../components/ClientLogo';
-import { getBanners, getStrapiImageUrl, getFeaturedProducts, getAllies } from '../services/strapi';
+import { getBanners, getStrapiImageUrl, getAllies } from '../services/strapi';
 import { REPRESENTATIVES_STATIC } from '../constants';
 
 const HomePage = () => {
@@ -10,8 +10,37 @@ const HomePage = () => {
   const [banners, setBanners] = useState<any[]>([]);
   const [heroIndex, setHeroIndex] = useState(0);
   const [bannerError, setBannerError] = useState<string | null>(null);
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
-  const [featuredLoading, setFeaturedLoading] = useState(true);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([
+    {
+      id: 'p1',
+      name: 'Sandalias Havaianas Harry Potter FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p2',
+      name: 'Chanclas Havaianas Urban Basic Material FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p3',
+      name: 'Sandalias Havaianas Super Coast FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+    {
+      id: 'p4',
+      name: 'Sandalias Havaianas Top Naruto FC',
+      category: 'Hombres',
+      description: 'Producto havaianas 100% original, importado de brasil.',
+      image: '/mock-product-image.svg',
+    },
+  ]);
+  const [featuredLoading, setFeaturedLoading] = useState(false);
   const [featuredError, setFeaturedError] = useState<string | null>(null);
   const [allies, setAllies] = useState<any[]>([]);
   const [alliesLoading, setAlliesLoading] = useState(true);
@@ -59,35 +88,6 @@ const HomePage = () => {
       }
     }
     fetchBanners();
-  }, []);
-
-  // Productos destacados desde Strapi
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchFeatured() {
-      try {
-        setFeaturedLoading(true);
-        const data = await getFeaturedProducts(4);
-        if (!isMounted) return;
-        setFeaturedProducts(Array.isArray(data) ? data : []);
-        setFeaturedError(null);
-      } catch (err: any) {
-        console.error('Error fetching featured products:', err);
-        if (isMounted) {
-          setFeaturedError('No se pudieron cargar los productos destacados');
-        }
-      } finally {
-        if (isMounted) {
-          setFeaturedLoading(false);
-        }
-      }
-    }
-
-    fetchFeatured();
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   // Aliados desde Strapi
