@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
-import { getRepresentatives, getStrapiImageUrl } from '../services/strapi';
+import { getStrapiImageUrl } from '../services/strapi';
+import { REPRESENTATIVES_STATIC } from '../constants';
 
 const RepsPage = () => {
   const [representatives, setRepresentatives] = useState<any[]>([]);
@@ -8,31 +9,11 @@ const RepsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function fetchReps() {
-      try {
-        setLoading(true);
-        const data = await getRepresentatives();
-        if (!isMounted) return;
-        setRepresentatives(Array.isArray(data) ? data : []);
-        setError(null);
-      } catch (err: any) {
-        console.error('Error fetching representatives:', err);
-        if (isMounted) {
-          setError('No se pudieron cargar los representantes');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    fetchReps();
-    return () => {
-      isMounted = false;
-    };
+    // Use static data from constants (images in public/uploads/) for now
+    setLoading(true);
+    setRepresentatives(REPRESENTATIVES_STATIC as any[]);
+    setError(null);
+    setLoading(false);
   }, []);
 
   const normalizedRepresentatives = useMemo(() => {
@@ -44,6 +25,10 @@ const RepsPage = () => {
 
   return (
     <div className="bg-white py-12">
+      <style>{`
+        .rep-card{transition: border-color .15s ease, box-shadow .15s ease;}
+        .rep-card:hover{border-color: #b91c1c !important; border-width: 0.7px !important; box-shadow: 0 6px 18px rgba(185,28,28,0.08);}
+      `}</style>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Nuestros Representantes</h1>
         {error && !loading && (
@@ -61,15 +46,27 @@ const RepsPage = () => {
               </div>
             ))
             : normalizedRepresentatives.map(rep => {
-              const attributes = rep.attributes || {};
-              const imageSource = attributes.image?.data ?? attributes.image;
-              const imageUrl = getStrapiImageUrl(imageSource) || 'https://picsum.photos/seed/rep/200';
+              const attributes = rep.attributes || rep;
+              // Resolve image: support Strapi-like objects, absolute URLs or local paths starting with '/'
+              const rawImage = attributes.image;
+              let imageUrl: string | null = null;
+              if (rawImage) {
+                if (typeof rawImage === 'string') {
+                  imageUrl = rawImage.startsWith('/') || rawImage.startsWith('http') ? rawImage : `/uploads/${rawImage}`;
+                } else {
+                  imageUrl = getStrapiImageUrl(rawImage) || null;
+                }
+              }
               const whatsappValue = attributes.whatsapp || attributes.phone || '';
               const whatsappNumber = typeof whatsappValue === 'string' ? whatsappValue.replace(/[^0-9]/g, '') : '';
 
               return (
-                <div key={rep.id} className="border border-gray-200 rounded-lg p-6 flex flex-col items-center text-center hover:shadow-md transition bg-white">
-                  <img src={imageUrl} alt={attributes.name || 'Representante'} className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-gray-100" />
+                <div key={rep.id} className="rep-card border border-gray-200 rounded-lg p-6 flex flex-col items-center text-center hover:shadow-md transition bg-white">
+                  {imageUrl ? (
+                    <img src={imageUrl} alt={attributes.name || 'Representante'} className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-gray-100" />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full bg-gray-100 mb-4 border-2 border-gray-100" />
+                  )}
                   <h3 className="text-lg font-bold text-gray-900">{attributes.name || 'Representante'}</h3>
                   {attributes.role && <span className="text-brand-red text-sm font-medium mb-4">{attributes.role}</span>}
                   <div className="text-sm text-gray-600 space-y-1 mb-6 w-full">

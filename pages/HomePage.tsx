@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle, MapPin, Phone, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
 import ClientLogo from '../components/ClientLogo';
-import { getBanners, getStrapiImageUrl, getFeaturedProducts, getAllies, getRepresentatives } from '../services/strapi';
+import { getBanners, getStrapiImageUrl, getFeaturedProducts, getAllies } from '../services/strapi';
+import { REPRESENTATIVES_STATIC } from '../constants';
 
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -15,8 +16,8 @@ const HomePage = () => {
   const [allies, setAllies] = useState<any[]>([]);
   const [alliesLoading, setAlliesLoading] = useState(true);
   const [alliesError, setAlliesError] = useState<string | null>(null);
-  const [representatives, setRepresentatives] = useState<any[]>([]);
-  const [representativesLoading, setRepresentativesLoading] = useState(true);
+  const [representatives, setRepresentatives] = useState<any[]>(REPRESENTATIVES_STATIC);
+  const [representativesLoading, setRepresentativesLoading] = useState(false);
   const [representativesError, setRepresentativesError] = useState<string | null>(null);
 
   // Lógica para auto-scroll en móvil
@@ -118,35 +119,7 @@ const HomePage = () => {
     };
   }, []);
 
-  // Representantes desde Strapi
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchRepresentatives() {
-      try {
-        setRepresentativesLoading(true);
-        const data = await getRepresentatives();
-        if (!isMounted) return;
-        setRepresentatives(Array.isArray(data) ? data : []);
-        setRepresentativesError(null);
-      } catch (err: any) {
-        console.error('Error fetching representatives:', err);
-        if (isMounted) {
-          setRepresentativesError('No se pudieron cargar los representantes');
-        }
-      } finally {
-        if (isMounted) {
-          setRepresentativesLoading(false);
-        }
-      }
-    }
-
-    fetchRepresentatives();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // Using static representatives for initial launch (from constants)
 
   const normalizedBanners = useMemo(() => {
     return (banners || [])
@@ -375,6 +348,11 @@ const HomePage = () => {
             </p>
           </div>
 
+          <style>{`
+            .rep-card{transition: border-color .15s ease, box-shadow .15s ease;}
+            .rep-card:hover{border-color: #b91c1c !important; border-width: 0.7px !important; box-shadow: 0 6px 18px rgba(185,28,28,0.08);}
+          `}</style>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {representativesLoading || normalizedRepresentatives.length === 0
               ? Array.from({ length: 3 }).map((_, index) => (
@@ -390,16 +368,24 @@ const HomePage = () => {
                 </div>
               ))
               : normalizedRepresentatives.map(rep => {
-                const attributes = rep.attributes || {};
-                const imageSource = attributes.image?.data ?? attributes.image;
-                const imageUrl = getStrapiImageUrl(imageSource) || 'https://picsum.photos/seed/rep/200';
+                const attributes = rep.attributes || rep;
+                const rawImage = attributes.image;
+                let imageUrl: string | null = null;
+                if (rawImage) {
+                  if (typeof rawImage === 'string') {
+                    imageUrl = rawImage.startsWith('/') || rawImage.startsWith('http') ? rawImage : `/uploads/${rawImage}`;
+                  } else {
+                    imageUrl = getStrapiImageUrl(rawImage) || null;
+                  }
+                }
+                const finalImage = imageUrl || 'https://picsum.photos/seed/rep/200';
                 const whatsappValue = attributes.whatsapp || attributes.phone || '';
                 const whatsappNumber = typeof whatsappValue === 'string' ? whatsappValue.replace(/[^0-9]/g, '') : '';
 
                 return (
-                  <div key={rep.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
+                  <div key={rep.id} className="rep-card bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
                     <div className="p-6 flex items-start gap-4">
-                      <img src={imageUrl} alt={attributes.name || 'Representante'} className="w-16 h-16 rounded-full object-cover border-2 border-brand-red/20" />
+                      <img src={finalImage} alt={attributes.name || 'Representante'} className="w-16 h-16 rounded-full object-cover border-2 border-brand-red/20" />
                       <div>
                         <h3 className="text-lg font-bold text-gray-900">{attributes.name || 'Representante'}</h3>
                         {attributes.role && <p className="text-brand-red font-medium text-sm">{attributes.role}</p>}
